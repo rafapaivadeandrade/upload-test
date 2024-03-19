@@ -1,6 +1,6 @@
 # Developer Test
 
-📖 This is a developer test for a senior developr position with a company based in Iceland. Developers contacted were given details on the company and the steps for the test.
+📖 This is a developer test for a Senior Developer position with a company based in Iceland. Developers contacted were given details on the company and the steps for the test.
 
 ## Task
 Clone this repository and build a simple file upload app using the Remix framework.
