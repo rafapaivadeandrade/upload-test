@@ -1,36 +1,28 @@
-# Welcome to Remix + Vite!
+# Developer Test
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+📖 This is a developer test for a senior developr position with a company based in Iceland. Developers contacted were given details on the company and the steps for the test.
 
-## Development
+## Task
+Clone this repository and build a simple file upload app using the Remix framework.
 
-Run the Vite dev server:
+### Requirements
+- Use the Remix framework and adhere to its conventions
+- Use or create a simple design with tailwindcss
+- Use or create a toast notification system
+- Simulate upload of a file to a server (you can use a library if if you want)
+- Display the uploaded file on the page
+- Simulate the upload with a delay
+- Simulate the upload failing
+- Simulate the upload succeeding
+- Simulate the upload being cancelled
+- Simulate the upload being paused
+- Create a failsafe method in case the network is offline during the upload (you can use a library like "react-use" or "@uidotdev/usehooks" for the network status)
 
-```shellscript
-npm run dev
-```
+### Bonus Requirements
+- Host your app on a serverless platform like Vercel or Cloudflare Workers.
+- Make the uploads work with the serverless platform with an actual api.
 
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
+### Notes
+- You can use any library you want to help you with the task
+- You can use any API you want to simulate the upload
+- You can use any API you want to simulate the network status
