@@ -17,6 +17,7 @@ Clone this repository and build a simple file upload app using the Remix framewo
 - Simulate the upload being cancelled
 - Simulate the upload being paused
 - Create a failsafe method in case the network is offline during the upload (you can use a library like "react-use" or "@uidotdev/usehooks" for the network status)
+- Allow third party user to access the uploaded file
 
 ### Bonus Requirements
 - Host your app on a serverless platform like Vercel or Cloudflare Workers
