@@ -7,16 +7,25 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "remix-serve ./build/server/index.js",
+    "start": "remix-serve ./build/server/index.js & json-server --watch db.json --port 3000",
+    "starting": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
     "@remix-run/node": "^2.8.1",
     "@remix-run/react": "^2.8.1",
     "@remix-run/serve": "^2.8.1",
+    "autoprefixer": "^10.4.18",
+    "cloudinary": "^2.24.1",
     "isbot": "^4.1.0",
+    "postcss": "^8.4.37",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-toast-notifications": "^2.5.1",
+    "styled-components": "^6.1.8",
+    "tailwindcss": "^3.4.1",
+    "twind": "^0.16.19"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.8.1",
