@@ -4,27 +4,31 @@ import {
   unstable_parseMultipartFormData,
   type MetaFunction,
   unstable_createMemoryUploadHandler,
+  LoaderFunction,
 } from "@remix-run/node"
 import { useToasts } from "react-toast-notifications"
 import { useState, useCallback } from "react"
 import { Form, useSubmit } from "@remix-run/react"
 import { GoUpload } from "react-icons/go"
+import { storeData } from "~/data/db"
 
 const MAX_SIZE = 1024 * 1024 * 5 //5MB in bytes
 
-export async function loader({ request }: DataFunctionArgs) {
-  return json({})
-}
-
 export async function action({ request }: DataFunctionArgs) {
-  const formData = await unstable_parseMultipartFormData(
-    request,
-    unstable_createMemoryUploadHandler({ maxPartSize: MAX_SIZE })
-  )
+  const formData = await request.formData()
+  const dataTemp = Object.fromEntries(formData)
 
-  const data = Object.fromEntries(formData)
-
-  return json({ data })
+  // const formData = await unstable_parseMultipartFormData(
+  //   request,
+  //   unstable_createMemoryUploadHandler({ maxPartSize: MAX_SIZE })
+  // )
+  try {
+    await storeData(dataTemp)
+    return json({ message: "Data sent to server successfully" })
+  } catch (error) {
+    console.error("Error sending data to server:", error)
+    return json({ error: "Failed to send data to server" }, { status: 500 })
+  }
 }
 
 export const meta: MetaFunction = () => {
@@ -44,8 +48,6 @@ export default function Index() {
   const submit = useSubmit()
 
   const uploadFile = async (file: File, simulate: string) => {
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
     if (simulate === "success") {
       addToast("Upload succeeded", { appearance: "success", autoDismiss: true })
     } else if (simulate === "fail") {
@@ -124,13 +126,21 @@ export default function Index() {
       }
 
       try {
-        //Upload file without server
+        // Simulate a delay before uploading
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
+        //Upload file in the mock server
         await uploadFile(file, "success")
         const formDataLocal = new FormData()
         formDataLocal.append("file", file)
         submit(formDataLocal, {
           method: "post",
           encType: "multipart/form-data",
+        })
+        // If submit succeeds, show a success toast
+        addToast("File uploaded to server successfully", {
+          appearance: "success",
+          autoDismiss: true,
         })
 
         // Upload file to Cloudinary(Third Party)
@@ -141,20 +151,6 @@ export default function Index() {
           appearance: "success",
           autoDismiss: true,
         })
-
-        //Upload file with mock server
-        const formData = new FormData()
-        formData.append("file", file)
-        const response = await fetch("http://localhost:3000/uploads", {
-          method: "POST",
-          body: formData,
-        })
-        if (!response.ok) {
-          addToast("Upload failed to server", {
-            appearance: "error",
-            autoDismiss: true,
-          })
-        }
       } catch (error: any) {
         addToast(`Upload failed: ${error.message}`, {
           appearance: "error",
@@ -207,6 +203,7 @@ export default function Index() {
             </span>
             <input
               id="profilePhoto"
+              name="file"
               type="file"
               hidden
               onChange={async e => {
