@@ -9,19 +9,8 @@ import { useToasts } from "react-toast-notifications"
 import { useState, useCallback } from "react"
 import { Form, useSubmit } from "@remix-run/react"
 import { GoUpload } from "react-icons/go"
-import cloudinary from "cloudinary"
 
-// Configure Cloudinary
-cloudinary.config({
-  // cloud_name: "djdheokru",
-  cloud_name: process.env.CLOUD_KEY,
-  // api_key: "916189674925129",
-  api_key: process.env.API_KEY,
-  // api_secret: "zEfasMTonc42C1LiWqzAHft4DQg",
-  api_secret: process.env.API_SECRET,
-})
-
-const MAX_SIZE = 1024 * 1024 * 5
+const MAX_SIZE = 1024 * 1024 * 5 //5MB in bytes
 
 export async function loader({ request }: DataFunctionArgs) {
   return json({})
@@ -49,7 +38,9 @@ export default function Index() {
   const { addToast } = useToasts()
   const [fileImage, setFile] = useState<File | null>(null)
   const [fileImageBlob, setFileBlob] = useState<string | undefined>(undefined)
-
+  const [imageCloudUrl, setImageCloudUrl] = useState<string | undefined>("")
+  const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
+  const cloud_name = import.meta.env.VITE_CLOUD_NAME
   const submit = useSubmit()
 
   const uploadFile = async (file: File, simulate: string) => {
@@ -70,9 +61,11 @@ export default function Index() {
 
   const uploadToCloudinary = async (file: string | Blob) => {
     const formData = new FormData()
-    formData.append("picture", file)
+    formData.append("file", file)
+    formData.append("cloud_name", cloud_name)
+    formData.append("upload_preset", upload_preset)
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/djdheokru/image/upload`,
+      `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
       {
         method: "POST",
         body: formData,
@@ -92,6 +85,7 @@ export default function Index() {
 
   const onFinish = useCallback(
     async (values: any) => {
+      //Failsafe method in case the network is offline during the upload
       if (!navigator.onLine) {
         addToast("Network is offline. Please check your connection.", {
           appearance: "error",
@@ -110,11 +104,30 @@ export default function Index() {
 
       const file = image.file
 
+      // Check file type
+      if (!["image/jpeg", "image/png"].includes(file.type)) {
+        addToast("Please select a JPG or PNG image", {
+          appearance: "error",
+          autoDismiss: true,
+        })
+        return
+      }
+
+      // Check file size
+      if (file.size > MAX_SIZE) {
+        // 5MB in bytes
+        addToast("File size exceeds the limit of 5MB", {
+          appearance: "error",
+          autoDismiss: true,
+        })
+        return
+      }
+
       try {
         //Upload file without server
-        const responseLocal = await uploadFile(file, "success")
+        await uploadFile(file, "success")
         const formDataLocal = new FormData()
-        formDataLocal.append("picture", file)
+        formDataLocal.append("file", file)
         submit(formDataLocal, {
           method: "post",
           encType: "multipart/form-data",
@@ -122,6 +135,7 @@ export default function Index() {
 
         // Upload file to Cloudinary(Third Party)
         const imageUrl = await uploadToCloudinary(file)
+        setImageCloudUrl(imageUrl)
 
         addToast(`Upload to Cloudinary succeeded,Link: ${imageUrl}`, {
           appearance: "success",
@@ -130,7 +144,7 @@ export default function Index() {
 
         //Upload file with mock server
         const formData = new FormData()
-        formData.append("picture", file)
+        formData.append("file", file)
         const response = await fetch("http://localhost:3000/uploads", {
           method: "POST",
           body: formData,
@@ -180,8 +194,12 @@ export default function Index() {
               >
                 <span className="text-main text-lg">Keeps</span>
               </label>
-              <label className="cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl"></label>
-              <label className="cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl"></label>
+              <label className="flex items-center justify-center font-raleway cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl">
+                <span className="text-dark text-lg">Dropbox</span>
+              </label>
+              <label className="flex items-center justify-center font-raleway cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl">
+                <span className="text-dark text-lg">Drive</span>
+              </label>
             </div>
             <span className="text-sm font-normal text-neutral">
               Photo must be less than <b>5MB</b> and be a <b>JPG</b> or{" "}
@@ -194,8 +212,8 @@ export default function Index() {
               onChange={async e => {
                 const file = e.currentTarget.files?.[0]
                 if (file) {
-                  const reader = new FileReader()
                   setFile(file)
+                  const reader = new FileReader()
                   reader.onload = event => {
                     setFileBlob(event.target?.result?.toString() ?? undefined)
                   }
@@ -227,22 +245,6 @@ export default function Index() {
             property.
           </span>
         </div>
-        {/* <Form
-          method="post"
-          encType="multipart/form-data"
-          onSubmit={event => {
-            event.preventDefault()
-
-            const formData = new FormData()
-            if (fileImage) {
-              formData.append("picture", fileImage)
-              submit(formData, {
-                method: "post",
-                encType: "multipart/form-data",
-              })
-            }
-          }}
-        > */}
         <label
           className={`cursor-pointer mt-6 bg-transparent w-full h-[80%] gap-[10px] flex flex-col justify-center items-center font-bold rounded-2xl border-neutral relative`}
           htmlFor="profilePhoto"
@@ -269,9 +271,11 @@ export default function Index() {
               }
             }}
           />
-          <img src={fileImageBlob} className="w-full h-full rounded-2xl" />
+          <img
+            src={fileImageBlob || imageCloudUrl}
+            className="w-full h-full rounded-2xl object-contain"
+          />
         </label>
-        {/* </Form> */}
       </div>
     </div>
   )
