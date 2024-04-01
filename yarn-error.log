@@ -1,0 +1,83 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\rafa_\.yarn\releases\yarn-1.17.3.js add dropbox
+
+PATH: 
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\Yarn\bin\;C:\ProgramData\chocolatey\bin;C:\Program Files\Java\jdk-11.0.15.1;C:\Program Files\PostgreSQL\12\bin;C:\Program Files\PostgreSQL\12\lib;C:\Users\rafa_\AppData\Roaming\npm;C:\Users\rafa_\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Git\cmd;C:\Users\rafa_\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\OpenJDK\openjdk-11.0.16_8\bin;C:\Users\rafa_\AppData\Local\Android\Sdk\platforms;C:\Program Files\dotnet\;C:\Program Files\MySQL\MySQL Server 5.5\bin;C:\Program Files\Git LFS;C:\Program Files\Docker\Docker\resources\bin;C:\ngrok;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\rafa_\AppData\Local\Microsoft\WindowsApps;C:\Users\rafa_\AppData\Local\Yarn\bin;C:\Users\rafa_\AppData\Roaming\npm;C:\Program Files\Java\jdk-11.0.15.1;C:\Users\rafa_\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\heroku\bin;C:\Users\rafa_\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\rafa_\AppData\Local\Android\Sdk;C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin
+
+Yarn version: 
+  1.17.3
+
+Node version: 
+  20.0.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  TypeError [ERR_INVALID_URL]: Invalid URL
+      at new NodeError (node:internal/errors:399:5)
+      at Url.parse (node:url:444:17)
+      at urlParse (node:url:166:13)
+      at GitResolver.isVersion (C:\Users\rafa_\.yarn\releases\yarn-1.17.3.js:38627:21)
+      at getExoticResolver (C:\Users\rafa_\.yarn\releases\yarn-1.17.3.js:29674:18)
+      at C:\Users\rafa_\.yarn\releases\yarn-1.17.3.js:38078:78
+      at Generator.next (<anonymous>)
+      at step (C:\Users\rafa_\.yarn\releases\yarn-1.17.3.js:310:30)
+      at C:\Users\rafa_\.yarn\releases\yarn-1.17.3.js:321:13
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+npm manifest: 
+  {
+    "name": "upload-test",
+    "private": true,
+    "sideEffects": false,
+    "type": "module",
+    "scripts": {
+      "build": "remix vite:build",
+      "dev": "remix vite:dev",
+      "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+      "server": "remix-serve ./build/server/index.js & json-server --watch db.json --port 3000",
+      "start": "remix-serve ./build/server/index.js",
+      "typecheck": "tsc"
+    },
+    "dependencies": {
+      "@remix-run/node": "^2.8.1",
+      "@remix-run/react": "^2.8.1",
+      "@remix-run/serve": "^2.8.1",
+      "autoprefixer": "^10.4.18",
+      "isbot": "^4.1.0",
+      "postcss": "^8.4.37",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^5.0.1",
+      "react-toast-notifications": "^2.5.1",
+      "styled-components": "^6.1.8",
+      "tailwindcss": "^3.4.1",
+      "twind": "^0.16.19"
+    },
+    "devDependencies": {
+      "@remix-run/dev": "^2.8.1",
+      "@types/react": "^18.2.20",
+      "@types/react-dom": "^18.2.7",
+      "@typescript-eslint/eslint-plugin": "^6.7.4",
+      "@typescript-eslint/parser": "^6.7.4",
+      "eslint": "^8.38.0",
+      "eslint-import-resolver-typescript": "^3.6.1",
+      "eslint-plugin-import": "^2.28.1",
+      "eslint-plugin-jsx-a11y": "^6.7.1",
+      "eslint-plugin-react": "^7.33.2",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "typescript": "^5.1.6",
+      "vite": "^5.1.0",
+      "vite-tsconfig-paths": "^4.2.1"
+    },
+    "engines": {
+      "node": ">=18.0.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

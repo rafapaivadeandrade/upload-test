@@ -1,27 +1,17 @@
-import {
-  DataFunctionArgs,
-  json,
-  unstable_parseMultipartFormData,
-  type MetaFunction,
-  unstable_createMemoryUploadHandler,
-  LoaderFunction,
-} from "@remix-run/node"
+import { DataFunctionArgs, json, type MetaFunction } from "@remix-run/node"
 import { useToasts } from "react-toast-notifications"
 import { useState, useCallback } from "react"
 import { Form, useSubmit } from "@remix-run/react"
 import { GoUpload } from "react-icons/go"
 import { storeData } from "~/data/db"
-
+import GoogleDrive from "~/components/GoogleDrive"
+import DropBox from "~/components/DropBox"
 const MAX_SIZE = 1024 * 1024 * 5 //5MB in bytes
 
 export async function action({ request }: DataFunctionArgs) {
   const formData = await request.formData()
   const dataTemp = Object.fromEntries(formData)
 
-  // const formData = await unstable_parseMultipartFormData(
-  //   request,
-  //   unstable_createMemoryUploadHandler({ maxPartSize: MAX_SIZE })
-  // )
   try {
     await storeData(dataTemp)
     return json({ message: "Data sent to server successfully" })
@@ -89,6 +79,7 @@ export default function Index() {
     async (values: any) => {
       //Failsafe method in case the network is offline during the upload
       if (!navigator.onLine) {
+        // If Network is offline, show a error toast
         addToast("Network is offline. Please check your connection.", {
           appearance: "error",
           autoDismiss: true,
@@ -97,6 +88,7 @@ export default function Index() {
       }
       const { image } = values
       if (!image || !image.file) {
+        // If image is not selected, show a error toast
         addToast("Please select an image", {
           appearance: "error",
           autoDismiss: true,
@@ -108,6 +100,7 @@ export default function Index() {
 
       // Check file type
       if (!["image/jpeg", "image/png"].includes(file.type)) {
+        // If image is not JPG OR PNG type, show a error toast
         addToast("Please select a JPG or PNG image", {
           appearance: "error",
           autoDismiss: true,
@@ -118,6 +111,7 @@ export default function Index() {
       // Check file size
       if (file.size > MAX_SIZE) {
         // 5MB in bytes
+        // If file size is bigger than 5BM, show a error toast
         addToast("File size exceeds the limit of 5MB", {
           appearance: "error",
           autoDismiss: true,
@@ -146,12 +140,13 @@ export default function Index() {
         // Upload file to Cloudinary(Third Party)
         const imageUrl = await uploadToCloudinary(file)
         setImageCloudUrl(imageUrl)
-
+        // If submit succeeds, show a success toast
         addToast(`Upload to Cloudinary succeeded,Link: ${imageUrl}`, {
           appearance: "success",
           autoDismiss: true,
         })
       } catch (error: any) {
+        // If submit fails, show a error toast
         addToast(`Upload failed: ${error.message}`, {
           appearance: "error",
           autoDismiss: true,
@@ -190,12 +185,8 @@ export default function Index() {
               >
                 <span className="text-main text-lg">Keeps</span>
               </label>
-              <label className="flex items-center justify-center font-raleway cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl">
-                <span className="text-dark text-lg">Dropbox</span>
-              </label>
-              <label className="flex items-center justify-center font-raleway cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl">
-                <span className="text-dark text-lg">Drive</span>
-              </label>
+              <DropBox setFile={setFile} setFileBlob={setFileBlob} />
+              {/* <GoogleDrive setFile={setFile} setFileBlob={setFileBlob} /> */}
             </div>
             <span className="text-sm font-normal text-neutral">
               Photo must be less than <b>5MB</b> and be a <b>JPG</b> or{" "}
