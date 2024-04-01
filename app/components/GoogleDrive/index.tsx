@@ -43,6 +43,7 @@ export default function GoogleDrive({ setFile, setFileBlob }: any) {
         className="flex items-center justify-center font-raleway cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl"
         htmlFor="drive"
       >
+        <img src="/drive.png" alt="drive logo" className="w-12" />
         <span className="text-dark text-lg">Drive</span>
       </label>
       <input

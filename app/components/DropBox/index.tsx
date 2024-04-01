@@ -25,7 +25,8 @@ export default function DropBox({ setFile, setFileBlob }: any) {
         className="flex items-center justify-center font-raleway cursor-pointer w-[25%] h-[50px] bg-transparent border border-neutral rounded-2xl"
         htmlFor="dropbox"
       >
-        <span className="text-dark text-lg">Dropbox</span>
+        <img src="/dropbox.jpg" alt="dropbox logo" className="w-20" />
+        <span className="text-dark text-lg -ml-5">Dropbox</span>
       </label>
       <input
         id="dropbox"
